@@ -3,6 +3,7 @@ package philip.com.hackernews.mvvm.model;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import philip.com.hackernews.AppExecutors;
 import philip.com.hackernews.mvvm.model.local.CommentEntity;
 import philip.com.hackernews.mvvm.model.local.HackerNewsDb;
 import philip.com.hackernews.mvvm.model.local.StoryEntity;
+import philip.com.hackernews.mvvm.model.local.UserEntity;
 import philip.com.hackernews.mvvm.model.remote.ApiInterface;
 import philip.com.hackernews.mvvm.model.remote.ApiResponse;
 import philip.com.hackernews.mvvm.model.remote.FetchNewStoryIdsTask;
@@ -100,6 +102,32 @@ public class Repository {
             @Override
             protected LiveData<ApiResponse<CommentEntity>> createCall() {
                 return mApiInterface.getComment(id);
+            }
+        }.asLiveData();
+    }
+
+    public LiveData<Resource<UserEntity>> getUser(final String id) {
+        return new NetworkBoundResource<UserEntity, UserEntity>(appExecutors) {
+            @Override
+            protected void saveCallResult(@NonNull UserEntity userEntity) {
+                mHackerNewsDb.userDao().insertUser(userEntity);
+            }
+
+            @Override
+            protected boolean shouldFetch(@Nullable UserEntity data) {
+                return !TextUtils.isEmpty(id);
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<UserEntity> loadFromDb() {
+                return mHackerNewsDb.userDao().loadUser(id);
+            }
+
+            @NonNull
+            @Override
+            protected LiveData<ApiResponse<UserEntity>> createCall() {
+                return mApiInterface.getUser(id);
             }
         }.asLiveData();
     }

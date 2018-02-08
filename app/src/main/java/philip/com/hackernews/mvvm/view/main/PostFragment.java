@@ -5,7 +5,6 @@ import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
@@ -17,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,6 +25,7 @@ import dagger.android.support.DaggerFragment;
 import philip.com.hackernews.R;
 import philip.com.hackernews.mvvm.model.Resource;
 import philip.com.hackernews.mvvm.model.local.StoryEntity;
+import philip.com.hackernews.mvvm.model.local.UserEntity;
 import philip.com.hackernews.mvvm.view.story.StoryActivity;
 import philip.com.hackernews.util.Constant;
 
@@ -42,6 +43,16 @@ public class PostFragment extends DaggerFragment {
     private PostRecyclerViewAdapter mPostRecyclerViewAdapter;
     private RecyclerView mRecyclerView;
 
+    private int visibleThreshold = 30;
+    private int lastVisibleItem = 0;
+    private int totalItemCount = 0;
+    private boolean isLoading = false;
+
+    private int[] storyIds;
+    private int index = 0;
+
+    private int networkCount = 0;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -58,19 +69,19 @@ public class PostFragment extends DaggerFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_post, container, false);
+        final View view = inflater.inflate(R.layout.fragment_post, container, false);
 
         Context context = view.getContext();
 
         mRecyclerView = view.findViewById(R.id.list);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mPostRecyclerViewAdapter = new PostRecyclerViewAdapter(new PostRecyclerListener() {
             @Override
             public void onClick(@Nullable String url, @Nullable String by, @Nullable int[] kids, int parent) {
                 if (!TextUtils.isEmpty(by)) {
-
+                    getUser(by);
                 } else {
                     Intent intent = new Intent(getContext(), StoryActivity.class);
                     intent.putExtra(Constant.EXTRA_URL, url);
@@ -81,6 +92,40 @@ public class PostFragment extends DaggerFragment {
             }
         });
         mRecyclerView.setAdapter(mPostRecyclerViewAdapter);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                totalItemCount = linearLayoutManager.getItemCount();
+                lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+                Log.d(LOG_TAG, "isLoading="+isLoading +"&&"+totalItemCount + "<=" + lastVisibleItem+"+"+visibleThreshold);
+                if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
+                    if (storyIds == null)
+                        return;
+                    isLoading = true;
+                    Log.d(LOG_TAG, storyIds.length + "<" + index+"+"+visibleThreshold);
+                    if (storyIds.length -1 < index + visibleThreshold) {
+                        Log.d(LOG_TAG, visibleThreshold + "=" + storyIds.length+"-1");
+                        visibleThreshold = storyIds.length - 1 - index;
+                        Log.d(LOG_TAG, "visibleThreshold="+visibleThreshold);
+
+                    }
+
+                    Log.d(LOG_TAG, networkCount + "=" + visibleThreshold);
+                    networkCount = visibleThreshold;
+                    Log.d(LOG_TAG, "networkCount="+networkCount);
+
+                    for (int i = index; i < index+visibleThreshold; i++) {
+                        getNewStories(storyIds[i]);
+                    }
+                    Log.d(LOG_TAG, index + "=" + visibleThreshold+"+"+index);
+                    index += visibleThreshold;
+                    Log.d(LOG_TAG, "index="+index);
+                }
+            }
+        });
 
         return view;
     }
@@ -98,9 +143,13 @@ public class PostFragment extends DaggerFragment {
                     return;
                 }
                 Log.d(LOG_TAG, listResource.data.toString());
-                for (int id : listResource.data) {
-                    getNewStories(id);
+
+                networkCount = visibleThreshold;
+                for (int i = 0; i < visibleThreshold; i++) {
+                    getNewStories(listResource.data[i]);
                 }
+                storyIds = listResource.data;
+                index = visibleThreshold;
             }
         });
         getNewStories(-1);
@@ -114,7 +163,29 @@ public class PostFragment extends DaggerFragment {
                     return;
                 }
 
+                Collections.reverse(listResource.data);
                 mPostRecyclerViewAdapter.setmStoryEntities(listResource.data);
+
+                networkCount--;
+                if (networkCount == 0) {
+                    isLoading = false;
+                    Log.d(LOG_TAG, "isLoading="+isLoading);
+                }
+            }
+        });
+    }
+
+    private void getUser(String by) {
+        mainViewModel.getmUser(by).observe(this, new Observer<Resource<UserEntity>>() {
+            @Override
+            public void onChanged(@Nullable Resource<UserEntity> userEntityResource) {
+                if (userEntityResource.data == null) {
+                    return;
+                }
+
+                Intent intent = new Intent(getContext(), BioActivity.class);
+                intent.putExtra(Constant.EXTRA_USER, userEntityResource.data);
+                startActivity(intent);
             }
         });
     }

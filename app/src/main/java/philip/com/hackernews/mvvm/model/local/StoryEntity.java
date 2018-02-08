@@ -10,10 +10,6 @@ import java.util.Date;
 
 import philip.com.hackernews.util.ArrayTypeConverter;
 
-/**
- * Created by 1000140 on 2018. 1. 22..
- */
-
 @Entity(tableName = "stories")
 public class StoryEntity {
     public String by;

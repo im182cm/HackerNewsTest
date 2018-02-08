@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">HackerNews</string>
 
-    <string name="text_link"><u>Link</u></string>
-    <string name="text_comment"><u>Comment</u></string>
+    <string name="dialog_title">User Bio</string>
 </resources>

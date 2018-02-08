@@ -48,16 +48,13 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
         this.appExecutors = appExecutors;
         result.setValue((Resource<ResultType>) Resource.loading(null));
         final LiveData<ResultType> dbSource = loadFromDb();
-        Log.d("TEST", dbSource.toString());
         result.addSource(dbSource, new Observer<ResultType>() {
             @Override
             public void onChanged(@Nullable ResultType data) {
                 result.removeSource(dbSource);
                 if (shouldFetch(data)) {
-                    Log.d("TEST", "shouldFetch");
                     fetchFromNetwork(dbSource);
                 } else {
-                    Log.d("TEST", "not shouldFetch");
                     result.addSource(dbSource, new Observer<ResultType>() {
                         @Override
                         public void onChanged(@Nullable ResultType newData) {
