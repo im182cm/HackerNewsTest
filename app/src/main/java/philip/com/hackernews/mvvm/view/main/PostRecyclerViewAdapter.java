@@ -59,11 +59,13 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         notifyItemRangeChanged(origin - 1, this.mStoryEntities.size() - 1);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final TextView mTextViewTitle;
         public final TextView mTextViewPoint;
         public final TextView mTextViewBy;
         public final TextView mTextViewDate;
+        public final TextView mTextViewLink;
+        public final TextView mTextViewComment;
 
         public ViewHolder(View view) {
             super(view);
@@ -71,26 +73,31 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             mTextViewPoint = view.findViewById(R.id.text_point);
             mTextViewBy = view.findViewById(R.id.text_by);
             mTextViewDate = view.findViewById(R.id.text_date);
+            mTextViewLink = view.findViewById(R.id.text_link);
+            mTextViewComment = view.findViewById(R.id.text_comment);
 
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mStoryEntities.isEmpty()) {
-                        return;
-                    }
-                    mListener.onClick(mStoryEntities.get(getAdapterPosition()).getUrl(), null);
-                }
-            });
+            mTextViewLink.setOnClickListener(this);
+            mTextViewBy.setOnClickListener(this);
+            mTextViewComment.setOnClickListener(this);
+        }
 
-            mTextViewBy.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mStoryEntities.isEmpty()) {
-                        return;
-                    }
-                    mListener.onClick(null, mStoryEntities.get(getAdapterPosition()).getBy());
-                }
-            });
+        @Override
+        public void onClick(View v) {
+            if (mStoryEntities.isEmpty()) {
+                return;
+            }
+
+            switch (v.getId()) {
+                case R.id.text_link:
+                    mListener.onClick(mStoryEntities.get(getAdapterPosition()).getUrl(), null, null);
+                    break;
+                case R.id.text_by:
+                    mListener.onClick(null, mStoryEntities.get(getAdapterPosition()).getBy(), null);
+                    break;
+                case R.id.text_comment:
+                    mListener.onClick(null, null, mStoryEntities.get(getAdapterPosition()).getKids());
+                    break;
+            }
         }
     }
 }

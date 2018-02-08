@@ -1,9 +1,14 @@
 package philip.com.hackernews.mvvm.model.local;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverter;
+import android.arch.persistence.room.TypeConverters;
 
 import java.util.Date;
+
+import philip.com.hackernews.util.ArrayTypeConverter;
 
 /**
  * Created by 1000140 on 2018. 1. 22..
@@ -19,8 +24,10 @@ public class StoryEntity {
     public String url;
     public int score;
     public long time;
+    @TypeConverters(ArrayTypeConverter.class)
+    public int[] kids;
 
-    public StoryEntity(String by, int id, String title, String type, String url, int score, long time) {
+    public StoryEntity(String by, int id, String title, String type, String url, int score, long time, int[] kids) {
         this.by = by;
         this.id = id;
         this.title = title;
@@ -28,6 +35,7 @@ public class StoryEntity {
         this.url = url;
         this.score = score;
         this.time = time;
+        this.kids = kids;
     }
 
     public String getBy() {
@@ -57,5 +65,9 @@ public class StoryEntity {
     public String getTime() {
         Date date = new Date(time * 1000);
         return date.toString();
+    }
+
+    public int[] getKids() {
+        return kids;
     }
 }

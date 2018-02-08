@@ -71,20 +71,21 @@ public class PostFragment extends DaggerFragment {
         mRecyclerView = view.findViewById(R.id.list);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
-        linearLayoutManager.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mPostRecyclerViewAdapter = new PostRecyclerViewAdapter(mRequestManager, new PostRecyclerListener() {
             @Override
-            public void onClick(@Nullable String url, @Nullable String by) {
-                if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(by))
+            public void onClick(@Nullable String url, @Nullable String by, @Nullable int[] kids) {
+                if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(by) && kids == null)
                     return;
 
                 if (!TextUtils.isEmpty(url)) {
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(url));
                     startActivity(i);
-                } else{
+                } else if (!TextUtils.isEmpty(by)) {
                     Log.d(LOG_TAG, by);
+                } else if (kids != null) {
+
                 }
             }
         });
@@ -108,7 +109,6 @@ public class PostFragment extends DaggerFragment {
                 Log.d(LOG_TAG, listResource.data.toString());
                 for (int id : listResource.data) {
                     getNewStories(id);
-
                 }
             }
         });
