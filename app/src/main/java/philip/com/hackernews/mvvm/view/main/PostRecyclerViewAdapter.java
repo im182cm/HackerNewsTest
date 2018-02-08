@@ -7,8 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.RequestManager;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +17,7 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     private List<StoryEntity> mStoryEntities = new ArrayList<>();
     private final PostRecyclerListener mListener;
 
-    public PostRecyclerViewAdapter(RequestManager mRequestManager, PostRecyclerListener postRecyclerListener) {
+    public PostRecyclerViewAdapter(PostRecyclerListener postRecyclerListener) {
         this.mListener = postRecyclerListener;
     }
 
@@ -46,17 +44,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
     }
 
     public void setmStoryEntities(List<StoryEntity> mStoryEntities) {
-        if (this.mStoryEntities.size() == mStoryEntities.size() || this.mStoryEntities.size() > mStoryEntities.size())
-            return;
-
-        int origin = this.mStoryEntities.size();
-        int diffCount = mStoryEntities.size() - this.mStoryEntities.size();
-        Log.d("TEST", origin + "," + diffCount);
-        for (int i = diffCount - 1; i >= 0; i--) {
-            Log.d("TEST", i + "");
-            this.mStoryEntities.add(mStoryEntities.get(i));
-        }
-        notifyItemRangeChanged(origin - 1, this.mStoryEntities.size() - 1);
+        this.mStoryEntities = mStoryEntities;
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -64,8 +53,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         public final TextView mTextViewPoint;
         public final TextView mTextViewBy;
         public final TextView mTextViewDate;
-        public final TextView mTextViewLink;
-        public final TextView mTextViewComment;
 
         public ViewHolder(View view) {
             super(view);
@@ -73,12 +60,9 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             mTextViewPoint = view.findViewById(R.id.text_point);
             mTextViewBy = view.findViewById(R.id.text_by);
             mTextViewDate = view.findViewById(R.id.text_date);
-            mTextViewLink = view.findViewById(R.id.text_link);
-            mTextViewComment = view.findViewById(R.id.text_comment);
 
-            mTextViewLink.setOnClickListener(this);
+            view.setOnClickListener(this);
             mTextViewBy.setOnClickListener(this);
-            mTextViewComment.setOnClickListener(this);
         }
 
         @Override
@@ -86,16 +70,15 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             if (mStoryEntities.isEmpty()) {
                 return;
             }
+            if (v.getId() == R.id.layout_post)
+                Log.d("TEST", "layout post clicked");
 
             switch (v.getId()) {
-                case R.id.text_link:
-                    mListener.onClick(mStoryEntities.get(getAdapterPosition()).getUrl(), null, null);
+                case R.id.layout_post:
+                    mListener.onClick(mStoryEntities.get(getAdapterPosition()).getUrl(), null, mStoryEntities.get(getAdapterPosition()).getKids());
                     break;
                 case R.id.text_by:
                     mListener.onClick(null, mStoryEntities.get(getAdapterPosition()).getBy(), null);
-                    break;
-                case R.id.text_comment:
-                    mListener.onClick(null, null, mStoryEntities.get(getAdapterPosition()).getKids());
                     break;
             }
         }

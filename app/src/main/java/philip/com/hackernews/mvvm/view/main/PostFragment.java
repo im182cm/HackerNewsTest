@@ -7,9 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,9 +17,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -30,6 +25,8 @@ import dagger.android.support.DaggerFragment;
 import philip.com.hackernews.R;
 import philip.com.hackernews.mvvm.model.Resource;
 import philip.com.hackernews.mvvm.model.local.StoryEntity;
+import philip.com.hackernews.mvvm.view.story.StoryActivity;
+import philip.com.hackernews.util.Constant;
 
 /**
  * A fragment representing a list of Items.
@@ -44,7 +41,6 @@ public class PostFragment extends DaggerFragment {
     private MainViewModel mainViewModel;
     private PostRecyclerViewAdapter mPostRecyclerViewAdapter;
     private RecyclerView mRecyclerView;
-    private RequestManager mRequestManager;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -57,8 +53,6 @@ public class PostFragment extends DaggerFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mRequestManager = Glide.with(this);
     }
 
     @Override
@@ -72,20 +66,19 @@ public class PostFragment extends DaggerFragment {
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mPostRecyclerViewAdapter = new PostRecyclerViewAdapter(mRequestManager, new PostRecyclerListener() {
+        mPostRecyclerViewAdapter = new PostRecyclerViewAdapter(new PostRecyclerListener() {
             @Override
             public void onClick(@Nullable String url, @Nullable String by, @Nullable int[] kids) {
-                if (!TextUtils.isEmpty(url) && !TextUtils.isEmpty(by) && kids == null)
+                if (TextUtils.isEmpty(url) && TextUtils.isEmpty(by) && kids == null)
                     return;
 
-                if (!TextUtils.isEmpty(url)) {
-                    Intent i = new Intent(Intent.ACTION_VIEW);
-                    i.setData(Uri.parse(url));
-                    startActivity(i);
-                } else if (!TextUtils.isEmpty(by)) {
-                    Log.d(LOG_TAG, by);
-                } else if (kids != null) {
+                if (!TextUtils.isEmpty(by)) {
 
+                } else {
+                    Intent intent = new Intent(getContext(), StoryActivity.class);
+                    intent.putExtra(Constant.EXTRA_URL, url);
+                    intent.putExtra(Constant.EXTRA_KIDS, kids);
+                    startActivity(intent);
                 }
             }
         });

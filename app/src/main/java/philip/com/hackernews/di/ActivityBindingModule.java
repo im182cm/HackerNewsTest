@@ -8,6 +8,7 @@ import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import philip.com.hackernews.mvvm.view.main.MainActivity;
 import philip.com.hackernews.mvvm.view.main.MainModule;
+import philip.com.hackernews.mvvm.view.story.StoryActivity;
 
 @Module
 abstract class ActivityBindingModule {
@@ -17,4 +18,8 @@ abstract class ActivityBindingModule {
     @ActivityScoped
     @ContributesAndroidInjector(modules = MainModule.class)
     abstract MainActivity mainActivity();
+
+    @ActivityScoped
+    @ContributesAndroidInjector
+    abstract StoryActivity storyActivity();
 }

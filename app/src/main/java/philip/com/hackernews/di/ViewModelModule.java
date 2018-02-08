@@ -7,6 +7,7 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoMap;
 import philip.com.hackernews.mvvm.view.main.MainViewModel;
+import philip.com.hackernews.mvvm.view.story.StoryViewModel;
 import philip.com.hackernews.mvvm.viewmodel.HackerNewsViewModelFactory;
 
 @Module
@@ -15,6 +16,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainViewModel.class)
     abstract ViewModel bindMainViewModel(MainViewModel mainViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StoryViewModel.class)
+    abstract ViewModel bindStoryViewModel(StoryViewModel storyViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(HackerNewsViewModelFactory factory);

@@ -57,9 +57,4 @@ class AppModule {
     HackerNewsDb provideDb(Application app) {
         return Room.databaseBuilder(app, HackerNewsDb.class,"hackernews.db").build();
     }
-
-    @Singleton @Provides
-    StoryDao provideUserDao(HackerNewsDb db) {
-        return db.storyDAO();
-    }
 }
