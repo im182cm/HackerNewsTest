@@ -56,7 +56,7 @@ public class PostFragment extends DaggerFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_post, container, false);
 
@@ -68,16 +68,14 @@ public class PostFragment extends DaggerFragment {
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mPostRecyclerViewAdapter = new PostRecyclerViewAdapter(new PostRecyclerListener() {
             @Override
-            public void onClick(@Nullable String url, @Nullable String by, @Nullable int[] kids) {
-                if (TextUtils.isEmpty(url) && TextUtils.isEmpty(by) && kids == null)
-                    return;
-
+            public void onClick(@Nullable String url, @Nullable String by, @Nullable int[] kids, int parent) {
                 if (!TextUtils.isEmpty(by)) {
 
                 } else {
                     Intent intent = new Intent(getContext(), StoryActivity.class);
                     intent.putExtra(Constant.EXTRA_URL, url);
                     intent.putExtra(Constant.EXTRA_KIDS, kids);
+                    intent.putExtra(Constant.EXTRA_PARENT, parent);
                     startActivity(intent);
                 }
             }

@@ -38,7 +38,8 @@ public class StoryActivity extends DaggerAppCompatActivity {
         initLayout();
 
         StoryViewModel storyViewModel = ViewModelProviders.of(this, viewModelFactory).get(StoryViewModel.class);
-        storyViewModel.getmComments().observe(this, new Observer<Resource<List<CommentEntity>>>() {
+        Log.d(LOG_TAG, "parent : "+getIntent().getIntExtra(Constant.EXTRA_PARENT, -1));
+        storyViewModel.getmComments(getIntent().getIntExtra(Constant.EXTRA_PARENT, -1)).observe(this, new Observer<Resource<List<CommentEntity>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<CommentEntity>> listResource) {
                 Log.d(LOG_TAG, listResource.status.name());
@@ -53,7 +54,7 @@ public class StoryActivity extends DaggerAppCompatActivity {
         int[] kids = getIntent().getIntArrayExtra(Constant.EXTRA_KIDS);
         if (kids != null){
             for (int kid : kids){
-                storyViewModel.getmComments(kid).observe(this, new Observer<Resource<List<CommentEntity>>>() {
+                storyViewModel.getmComments(getIntent().getIntExtra(Constant.EXTRA_PARENT, -1), kid).observe(this, new Observer<Resource<List<CommentEntity>>>() {
                     @Override
                     public void onChanged(@Nullable Resource<List<CommentEntity>> listResource) {
                         if (listResource.data == null)

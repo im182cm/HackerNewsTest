@@ -71,7 +71,7 @@ public class Repository {
         }.asLiveData();
     }
 
-    public LiveData<Resource<List<CommentEntity>>> getComment(final int id) {
+    public LiveData<Resource<List<CommentEntity>>> getComment(final int parent, final int id) {
         return new NetworkBoundResource<List<CommentEntity>, CommentEntity>(appExecutors) {
             @Override
             protected void saveCallResult(@NonNull CommentEntity commentEntity) {
@@ -93,7 +93,7 @@ public class Repository {
             @NonNull
             @Override
             protected LiveData<List<CommentEntity>> loadFromDb() {
-                return mHackerNewsDb.commentDao().loadComments();
+                return mHackerNewsDb.commentDao().loadComments(parent);
             }
 
             @NonNull

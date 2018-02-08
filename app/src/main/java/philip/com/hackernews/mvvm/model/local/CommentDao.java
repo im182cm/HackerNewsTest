@@ -13,6 +13,6 @@ public interface CommentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertComment(CommentEntity commentEntity);
 
-    @Query("SELECT * from comments")
-    LiveData<List<CommentEntity>> loadComments();
+    @Query("SELECT * from comments where parent = :id")
+    LiveData<List<CommentEntity>> loadComments(int id);
 }

@@ -21,15 +21,14 @@ public class StoryViewModel extends ViewModel {
     @SuppressWarnings("unchecked")
     @Inject
     public StoryViewModel(Repository repository) {
-        mComments = repository.getComment(-1);
     }
 
-    public LiveData<Resource<List<CommentEntity>>> getmComments(int id) {
-        mComments = mRepository.getComment(id);
+    public LiveData<Resource<List<CommentEntity>>> getmComments(int parent, int id) {
+        mComments = mRepository.getComment(parent, id);
         return mComments;
     }
 
-    public LiveData<Resource<List<CommentEntity>>> getmComments() {
-        return mComments;
+    public LiveData<Resource<List<CommentEntity>>> getmComments(int parent) {
+        return mComments = mRepository.getComment(parent, -1);
     }
 }

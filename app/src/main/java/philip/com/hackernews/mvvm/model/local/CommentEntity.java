@@ -20,13 +20,15 @@ public class CommentEntity {
     public String text;
     public String type;
     public long time;
+    int parent;
 
-    public CommentEntity(String by, int id, String text, String type, long time) {
+    public CommentEntity(String by, int id, String text, String type, long time, int parent) {
         this.by = by;
         this.id = id;
         this.text = text;
         this.type = type;
         this.time = time;
+        this.parent = parent;
     }
 
     public String getBy() {
@@ -48,5 +50,9 @@ public class CommentEntity {
     public String getTime() {
         Date date = new Date(time * 1000);
         return date.toString();
+    }
+
+    public int getParent() {
+        return parent;
     }
 }
