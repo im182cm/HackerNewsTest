@@ -1,5 +1,6 @@
 package philip.com.hackernews.mvvm.view.story;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
@@ -41,7 +42,7 @@ public class StoryActivity extends DaggerAppCompatActivity {
         storyViewModel.getmComments(getIntent().getIntExtra(Constant.EXTRA_PARENT, -1)).observe(this, new Observer<Resource<List<CommentEntity>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<CommentEntity>> listResource) {
-                if (listResource.data == null) {
+                if (listResource == null || listResource.data == null) {
                     return;
                 }
                 mCommentRecyclerViewAdapter.setmCommentEntities(listResource.data);
@@ -54,7 +55,7 @@ public class StoryActivity extends DaggerAppCompatActivity {
                 storyViewModel.getmComments(getIntent().getIntExtra(Constant.EXTRA_PARENT, -1), kid).observe(this, new Observer<Resource<List<CommentEntity>>>() {
                     @Override
                     public void onChanged(@Nullable Resource<List<CommentEntity>> listResource) {
-                        if (listResource.data == null)
+                        if (listResource == null || listResource.data == null)
                             return;
 
                         mCommentRecyclerViewAdapter.setmCommentEntities(listResource.data);
@@ -66,6 +67,7 @@ public class StoryActivity extends DaggerAppCompatActivity {
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     private void initLayout() {
         WebView webView = findViewById(R.id.webview_url);
 

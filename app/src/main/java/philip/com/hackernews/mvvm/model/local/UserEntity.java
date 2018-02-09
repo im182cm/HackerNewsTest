@@ -14,6 +14,7 @@ import philip.com.hackernews.util.ArrayTypeConverter;
 /**
  * Database structure of users.
  */
+@SuppressWarnings({"NullableProblems", "WeakerAccess", "CanBeFinal"})
 @Entity(tableName = "users")
 public class UserEntity implements Parcelable {
     @PrimaryKey

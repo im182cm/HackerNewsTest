@@ -44,6 +44,7 @@ public class PostFragment extends DaggerFragment {
     private boolean mIsLoading = false;
     private boolean mIsStoryIdsLoaded = false;
 
+    @SuppressWarnings("CanBeFinal")
     private List<StoryEntity> mStoryEntities = new ArrayList<>();
 
     /**
@@ -54,11 +55,7 @@ public class PostFragment extends DaggerFragment {
     public PostFragment() {
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
+    @SuppressWarnings({"ConstantConditions", "NullableProblems"})
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -103,10 +100,8 @@ public class PostFragment extends DaggerFragment {
                     }
                     // Let's say it is started.
                     mIsLoading = true;
-                    // How many data I should fetch from API.
-                    int fetchingDataCount = mVisibleThreshold;
 
-                    getTopStories(fetchingDataCount);
+                    getTopStories(mVisibleThreshold);
                 }
             }
         });
@@ -121,13 +116,13 @@ public class PostFragment extends DaggerFragment {
         mMainViewModel.getmTopStoryIds().observe(this, new Observer<Resource<int[]>>() {
             @Override
             public void onChanged(@Nullable Resource<int[]> listResource) {
-                if (listResource.data == null) {
+                if (listResource == null || listResource.data == null) {
                     return;
                 }
 
                 mIsStoryIdsLoaded = true;
 
-                int fetchingDataCount = 0;
+                int fetchingDataCount;
                 // If mVisibleThreshold is bigger than Top stories array. Maybe This will not going to happen in this app.
                 if (mVisibleThreshold > listResource.data.length) {
                     fetchingDataCount = listResource.data.length;
@@ -145,6 +140,9 @@ public class PostFragment extends DaggerFragment {
         mMainViewModel.getmTopStories(fetchingDataCount).observe(this, new Observer<Resource<List<StoryEntity>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<StoryEntity>> listResource) {
+                if (listResource == null || listResource.data == null)
+                    return;
+
                 mStoryEntities.addAll(listResource.data);
                 mPostRecyclerViewAdapter.setmStoryEntities(mStoryEntities);
                 mIsLoading = false;
@@ -156,7 +154,7 @@ public class PostFragment extends DaggerFragment {
         mMainViewModel.getmUser(by).observe(this, new Observer<Resource<UserEntity>>() {
             @Override
             public void onChanged(@Nullable Resource<UserEntity> userEntityResource) {
-                if (userEntityResource.data == null) {
+                if (userEntityResource == null || userEntityResource.data == null) {
                     return;
                 }
 

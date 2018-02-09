@@ -4,8 +4,7 @@
     android:id="@+id/layout_post"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_ffffff"
-    android:padding="15dp">
+    android:padding="@dimen/dimen_15dp">
 
     <TextView
         android:id="@+id/text_title"
@@ -22,7 +21,7 @@
         android:id="@+id/text_by"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="@dimen/dimen_15dp"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBaseline_toBaselineOf="@id/text_point"
         app:layout_constraintLeft_toRightOf="@+id/text_point" />
@@ -31,7 +30,7 @@
         android:id="@+id/text_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="@dimen/dimen_15dp"
         app:layout_constraintBaseline_toBaselineOf="@id/text_point"
         app:layout_constraintLeft_toRightOf="@+id/text_by" />
 

@@ -37,8 +37,6 @@ public class ApiResponse<T> {
     private static final String LOG_TAG = ApiResponse.class.getSimpleName();
     private static final Pattern LINK_PATTERN = Pattern
             .compile("<([^>]*)>[\\s]*;[\\s]*rel=\"([a-zA-Z0-9]+)\"");
-    private static final Pattern PAGE_PATTERN = Pattern.compile("\\bpage=(\\d+)");
-    private static final String NEXT_LINK = "next";
     private final int code;
     @Nullable
     public final T body;
@@ -54,6 +52,7 @@ public class ApiResponse<T> {
         links = Collections.emptyMap();
     }
 
+    @SuppressWarnings("ConstantConditions")
     public ApiResponse(Response<T> response) {
         code = response.code();
         if(response.isSuccessful()) {

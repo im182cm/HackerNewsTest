@@ -61,7 +61,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
 
         public ViewHolder(View view) {
             super(view);
-            mTextViewText = view.findViewById(R.id.text_title);
+            mTextViewText = view.findViewById(R.id.text_comment);
             mTextViewBy = view.findViewById(R.id.text_by);
             mTextViewDate = view.findViewById(R.id.text_date);
         }

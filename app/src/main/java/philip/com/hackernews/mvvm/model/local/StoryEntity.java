@@ -4,7 +4,6 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import philip.com.hackernews.util.ArrayTypeConverter;
@@ -12,6 +11,7 @@ import philip.com.hackernews.util.ArrayTypeConverter;
 /**
  * Database structure of stories
  */
+@SuppressWarnings("CanBeFinal")
 @Entity(tableName = "stories")
 public class StoryEntity {
     private String by;

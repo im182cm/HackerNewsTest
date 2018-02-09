@@ -56,6 +56,7 @@ public class Resource<T> {
         return new Resource<>(LOADING, data, null);
     }
 
+    @SuppressWarnings("SimplifiableIfStatement")
     @Override
     public boolean equals(Object o) {
         if (this == o) {

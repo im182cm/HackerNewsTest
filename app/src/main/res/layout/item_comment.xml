@@ -4,24 +4,25 @@
     android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:background="@color/color_ffffff">
+    android:padding="@dimen/dimen_5dp">
 
     <TextView
         android:id="@+id/text_by"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary" />
+        android:layout_marginRight="@dimen/dimen_15dp"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintRight_toLeftOf="@+id/text_date" />
 
     <TextView
         android:id="@+id/text_date"
         android:layout_width="wrap_content"
-        android:layout_marginLeft="15dp"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_15dp"
         app:layout_constraintLeft_toRightOf="@id/text_by" />
 
     <TextView
-        android:id="@+id/text_title"
+        android:id="@+id/text_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/text_by" />

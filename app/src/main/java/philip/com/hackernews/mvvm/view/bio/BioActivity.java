@@ -4,10 +4,11 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.Spannable;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.widget.TextView;
+
+import java.util.Arrays;
 
 import philip.com.hackernews.R;
 import philip.com.hackernews.mvvm.model.local.UserEntity;
@@ -43,8 +44,8 @@ public class BioActivity extends AppCompatActivity {
 
                 textViewAbout.setText(aboutHtml);
             }
-            textViewKrama.setText(user.getKarma() + "");
-            textViewSubmitted.setText(user.getSubmitted().toString());
+            textViewKrama.setText(String.valueOf(user.getKarma()));
+            textViewSubmitted.setText(Arrays.toString(user.getSubmitted()));
             textViewCreated.setText(user.getCreated());
         }
     }

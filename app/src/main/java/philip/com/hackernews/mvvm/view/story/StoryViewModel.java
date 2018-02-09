@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import philip.com.hackernews.mvvm.model.Repository;
 import philip.com.hackernews.mvvm.model.Resource;
 import philip.com.hackernews.mvvm.model.local.CommentEntity;
-import philip.com.hackernews.mvvm.model.local.StoryEntity;
 
 public class StoryViewModel extends ViewModel {
     private LiveData<Resource<List<CommentEntity>>> mComments;

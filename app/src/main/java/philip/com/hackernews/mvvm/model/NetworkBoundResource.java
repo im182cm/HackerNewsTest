@@ -121,6 +121,7 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
         });
     }
 
+    @SuppressWarnings("EmptyMethod")
     private void onFetchFailed() {
     }
 

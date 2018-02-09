@@ -25,7 +25,6 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import philip.com.hackernews.mvvm.model.local.StoryDao;
 import philip.com.hackernews.mvvm.model.local.HackerNewsDb;
 import philip.com.hackernews.mvvm.model.remote.ApiInterface;
 import philip.com.hackernews.util.LiveDataCallAdapterFactory;

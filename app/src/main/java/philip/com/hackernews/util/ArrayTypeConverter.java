@@ -8,7 +8,7 @@ import com.google.gson.Gson;
  * TypeConvert to save int array in DB.
  */
 public class ArrayTypeConverter {
-    Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     @TypeConverter
     public int[] stringToSomeObjectList(String data) {

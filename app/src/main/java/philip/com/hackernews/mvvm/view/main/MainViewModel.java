@@ -38,6 +38,7 @@ public class MainViewModel extends ViewModel {
         return mTopStoryIds;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public LiveData<Resource<List<StoryEntity>>> getmTopStories(int fetchingDataCount) {
         // If it exceeds Top story ids array size, then fetch amount of remain count.
         if (mTopStoryIds.getValue().data.length - 1 < mIdsIndex + mVisibleThreshold) {

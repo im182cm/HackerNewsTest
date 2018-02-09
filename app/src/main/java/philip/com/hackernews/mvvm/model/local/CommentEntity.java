@@ -2,16 +2,14 @@ package philip.com.hackernews.mvvm.model.local;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverters;
 
 import java.util.Date;
-
-import philip.com.hackernews.util.ArrayTypeConverter;
 
 /**
  * Database structure of comments.
  */
 
+@SuppressWarnings("CanBeFinal")
 @Entity(tableName = "comments")
 public class CommentEntity {
     private String by;
@@ -19,6 +17,7 @@ public class CommentEntity {
     private int id;
     private String text;
     private String type;
+    @SuppressWarnings("WeakerAccess")
     public long time;
     private int parent;
 

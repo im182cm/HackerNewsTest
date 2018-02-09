@@ -26,7 +26,6 @@ import philip.com.hackernews.mvvm.view.main.PostFragment;
  */
 @Singleton
 public class Repository {
-    private static final String LOG_TAG = Repository.class.getSimpleName();
     private final ApiInterface mApiInterface;
     private final HackerNewsDb mHackerNewsDb;
     private final AppExecutors appExecutors;
@@ -73,6 +72,9 @@ public class Repository {
              */
             @Override
             protected boolean shouldFetch(@Nullable List<CommentEntity> data) {
+                if (data == null)
+                    return true;
+
                 boolean isExist = false;
                 for (CommentEntity commentEntity : data) {
                     if (commentEntity.getId() == id) {
