@@ -14,7 +14,7 @@ public interface ApiInterface {
     Call<int[]> getNewStories();
 
     @GET("item/{id}.json?print=pretty")
-    LiveData<ApiResponse<StoryEntity>> getStory(@Path("id") int id);
+    Call<StoryEntity> getStory(@Path("id") int id);
 
     @GET("item/{id}.json?print=pretty")
     LiveData<ApiResponse<CommentEntity>> getComment(@Path("id") int id);

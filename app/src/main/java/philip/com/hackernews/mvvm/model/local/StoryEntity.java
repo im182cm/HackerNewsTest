@@ -1,11 +1,10 @@
 package philip.com.hackernews.mvvm.model.local;
 
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import philip.com.hackernews.util.ArrayTypeConverter;
@@ -65,5 +64,19 @@ public class StoryEntity {
 
     public int[] getKids() {
         return kids;
+    }
+
+    @Override
+    public String toString() {
+        return "StoryEntity{" +
+                "by='" + by + '\'' +
+                ", id=" + id +
+                ", title='" + title + '\'' +
+                ", type='" + type + '\'' +
+                ", url='" + url + '\'' +
+                ", score=" + score +
+                ", time=" + time +
+                ", kids=" + Arrays.toString(kids) +
+                '}';
     }
 }

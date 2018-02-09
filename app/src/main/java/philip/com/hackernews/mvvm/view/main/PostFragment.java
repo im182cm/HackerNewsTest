@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerFragment;
 import philip.com.hackernews.R;
 import philip.com.hackernews.mvvm.model.Resource;
+import philip.com.hackernews.mvvm.model.Status;
 import philip.com.hackernews.mvvm.model.local.StoryEntity;
 import philip.com.hackernews.mvvm.model.local.UserEntity;
 import philip.com.hackernews.mvvm.view.story.StoryActivity;
@@ -51,7 +54,8 @@ public class PostFragment extends DaggerFragment {
     private int[] storyIds;
     private int index = 0;
 
-    private int networkCount = 0;
+    private int expectedCount = 0;
+    private List<StoryEntity> storyEntities = new ArrayList<>();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -100,29 +104,17 @@ public class PostFragment extends DaggerFragment {
 
                 totalItemCount = linearLayoutManager.getItemCount();
                 lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-                Log.d(LOG_TAG, "isLoading="+isLoading +"&&"+totalItemCount + "<=" + lastVisibleItem+"+"+visibleThreshold);
                 if (!isLoading && totalItemCount <= (lastVisibleItem + visibleThreshold)) {
                     if (storyIds == null)
                         return;
                     isLoading = true;
-                    Log.d(LOG_TAG, storyIds.length + "<" + index+"+"+visibleThreshold);
-                    if (storyIds.length -1 < index + visibleThreshold) {
-                        Log.d(LOG_TAG, visibleThreshold + "=" + storyIds.length+"-1");
-                        visibleThreshold = storyIds.length - 1 - index;
-                        Log.d(LOG_TAG, "visibleThreshold="+visibleThreshold);
+                    expectedCount = visibleThreshold;
 
+                    if (storyIds.length - 1 < index + visibleThreshold) {
+                        expectedCount = storyIds.length - 1 - index;
                     }
 
-                    Log.d(LOG_TAG, networkCount + "=" + visibleThreshold);
-                    networkCount = visibleThreshold;
-                    Log.d(LOG_TAG, "networkCount="+networkCount);
-
-                    for (int i = index; i < index+visibleThreshold; i++) {
-                        getNewStories(storyIds[i]);
-                    }
-                    Log.d(LOG_TAG, index + "=" + visibleThreshold+"+"+index);
-                    index += visibleThreshold;
-                    Log.d(LOG_TAG, "index="+index);
+                    getTopStories();
                 }
             }
         });
@@ -144,33 +136,35 @@ public class PostFragment extends DaggerFragment {
                 }
                 Log.d(LOG_TAG, listResource.data.toString());
 
-                networkCount = visibleThreshold;
-                for (int i = 0; i < visibleThreshold; i++) {
-                    getNewStories(listResource.data[i]);
+                // if top stories ids are not more than visibleThreshold
+                if (visibleThreshold > listResource.data.length) {
+                    expectedCount = listResource.data.length;
+                } else {
+                    expectedCount = visibleThreshold;
                 }
+
                 storyIds = listResource.data;
-                index = visibleThreshold;
+
+                getTopStories();
             }
         });
-        getNewStories(-1);
     }
 
-    private void getNewStories(int id) {
-        mainViewModel.getmNewStories(id).observe(this, new Observer<Resource<List<StoryEntity>>>() {
+    private void getTopStories() {
+        int[] ids = Arrays.copyOfRange(storyIds, index, index+expectedCount);
+        index = index + expectedCount - 1;
+        expectedCount = 0;
+
+        mainViewModel.getmNewStories(ids).observe(this, new Observer<Resource<List<StoryEntity>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<StoryEntity>> listResource) {
-                if (listResource.data == null) {
+                if (!listResource.status.equals(Status.SUCCESS)) {
                     return;
                 }
 
-                Collections.reverse(listResource.data);
-                mPostRecyclerViewAdapter.setmStoryEntities(listResource.data);
-
-                networkCount--;
-                if (networkCount == 0) {
-                    isLoading = false;
-                    Log.d(LOG_TAG, "isLoading="+isLoading);
-                }
+                storyEntities.addAll(listResource.data);
+                mPostRecyclerViewAdapter.setmStoryEntities(storyEntities);
+                isLoading = false;
             }
         });
     }

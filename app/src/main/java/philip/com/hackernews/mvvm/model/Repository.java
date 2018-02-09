@@ -17,6 +17,7 @@ import philip.com.hackernews.mvvm.model.local.StoryEntity;
 import philip.com.hackernews.mvvm.model.local.UserEntity;
 import philip.com.hackernews.mvvm.model.remote.ApiInterface;
 import philip.com.hackernews.mvvm.model.remote.ApiResponse;
+import philip.com.hackernews.mvvm.model.remote.FetchNewStoriesTask;
 import philip.com.hackernews.mvvm.model.remote.FetchNewStoryIdsTask;
 
 @Singleton
@@ -40,8 +41,11 @@ public class Repository {
         return fetchNewStoryIdsTask.getLiveData();
     }
 
-    public LiveData<Resource<List<StoryEntity>>> getStory(final int id) {
-        return new NetworkBoundResource<List<StoryEntity>, StoryEntity>(appExecutors) {
+    public LiveData<Resource<List<StoryEntity>>> getStory(int[] ids) {
+        FetchNewStoriesTask fetchNewStoriesTask = new FetchNewStoriesTask(mApiInterface, ids);
+        appExecutors.networkIO().execute(fetchNewStoriesTask);
+        return fetchNewStoriesTask.getLiveData();
+        /*return new NetworkBoundResource<List<StoryEntity>, StoryEntity>(appExecutors) {
             @Override
             protected void saveCallResult(@NonNull StoryEntity newStory) {
                 mHackerNewsDb.storyDAO().insertStory(newStory);
@@ -70,7 +74,7 @@ public class Repository {
             protected LiveData<ApiResponse<StoryEntity>> createCall() {
                 return mApiInterface.getStory(id);
             }
-        }.asLiveData();
+        }.asLiveData();*/
     }
 
     public LiveData<Resource<List<CommentEntity>>> getComment(final int parent, final int id) {

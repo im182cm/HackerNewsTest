@@ -12,10 +12,6 @@ import philip.com.hackernews.mvvm.model.Resource;
 import philip.com.hackernews.mvvm.model.local.StoryEntity;
 import philip.com.hackernews.mvvm.model.local.UserEntity;
 
-/**
- * Created by 1000140 on 2018. 1. 30..
- */
-
 public class MainViewModel extends ViewModel {
     private final LiveData<Resource<int[]>> mNewStoryIds;
     private LiveData<Resource<List<StoryEntity>>> mNewStories;
@@ -34,8 +30,8 @@ public class MainViewModel extends ViewModel {
         return mNewStoryIds;
     }
 
-    public LiveData<Resource<List<StoryEntity>>> getmNewStories(int id) {
-        mNewStories = mRepository.getStory(id);
+    public LiveData<Resource<List<StoryEntity>>> getmNewStories(int[] ids) {
+        mNewStories = mRepository.getStory(ids);
         return mNewStories;
     }
 
