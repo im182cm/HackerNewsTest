@@ -11,8 +11,11 @@ import java.util.Date;
 
 import philip.com.hackernews.util.ArrayTypeConverter;
 
+/**
+ * Database structure of users.
+ */
 @Entity(tableName = "users")
-public class UserEntity implements Parcelable{
+public class UserEntity implements Parcelable {
     @PrimaryKey
     @NonNull
     public String id;

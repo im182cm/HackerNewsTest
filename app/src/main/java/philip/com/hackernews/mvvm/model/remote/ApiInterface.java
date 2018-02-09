@@ -9,6 +9,9 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 
+/**
+ * API for Hacker News and interface of Retrofit2.
+ */
 public interface ApiInterface {
     @GET("topstories.json?print=pretty")
     Call<int[]> getNewStories();

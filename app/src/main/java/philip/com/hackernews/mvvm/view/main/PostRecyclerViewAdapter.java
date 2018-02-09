@@ -1,7 +1,6 @@
 package philip.com.hackernews.mvvm.view.main;
 
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,9 @@ import java.util.List;
 import philip.com.hackernews.R;
 import philip.com.hackernews.mvvm.model.local.StoryEntity;
 
+/**
+ * Adapter for PostRecyclerView.
+ */
 public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerViewAdapter.ViewHolder> {
     private List<StoryEntity> mStoryEntities = new ArrayList<>();
     private final PostRecyclerListener mListener;

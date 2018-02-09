@@ -12,6 +12,9 @@ import philip.com.hackernews.mvvm.model.Resource;
 import philip.com.hackernews.mvvm.model.local.StoryEntity;
 import philip.com.hackernews.mvvm.model.local.UserEntity;
 
+/**
+ * ViewModel for {@link MainActivity}
+ */
 public class MainViewModel extends ViewModel {
     private final LiveData<Resource<int[]>> mNewStoryIds;
     private LiveData<Resource<List<StoryEntity>>> mNewStories;
@@ -23,7 +26,7 @@ public class MainViewModel extends ViewModel {
     @SuppressWarnings("unchecked")
     @Inject
     public MainViewModel(Repository repository) {
-        mNewStoryIds = repository.getNewStoryIds();
+        mNewStoryIds = repository.getTopStoryIds();
     }
 
     public LiveData<Resource<int[]>> getmTopStoryIds() {
@@ -31,7 +34,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public LiveData<Resource<List<StoryEntity>>> getmTopStories(int[] ids) {
-        mNewStories = mRepository.getStory(ids);
+        mNewStories = mRepository.getStories(ids);
         return mNewStories;
     }
 

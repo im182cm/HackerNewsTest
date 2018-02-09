@@ -8,6 +8,9 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
+/**
+ * Data Access Object for comments db.
+ */
 @Dao
 public interface CommentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

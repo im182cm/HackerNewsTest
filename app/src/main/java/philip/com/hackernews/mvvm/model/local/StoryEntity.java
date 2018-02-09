@@ -9,6 +9,9 @@ import java.util.Date;
 
 import philip.com.hackernews.util.ArrayTypeConverter;
 
+/**
+ * Database structure of stories
+ */
 @Entity(tableName = "stories")
 public class StoryEntity {
     public String by;
@@ -57,6 +60,9 @@ public class StoryEntity {
         return score;
     }
 
+    /**
+     * Convert Unix time to date before return.
+     */
     public String getTime() {
         Date date = new Date(time * 1000);
         return date.toString();

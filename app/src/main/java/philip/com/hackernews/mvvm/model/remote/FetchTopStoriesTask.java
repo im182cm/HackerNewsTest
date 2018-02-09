@@ -13,13 +13,16 @@ import philip.com.hackernews.mvvm.model.local.HackerNewsDb;
 import philip.com.hackernews.mvvm.model.local.StoryEntity;
 import retrofit2.Response;
 
-public class FetchNewStoriesTask implements Runnable {
+/**
+ * Runnable class to fetch 30 data at once, and save in DB.
+ */
+public class FetchTopStoriesTask implements Runnable {
     private final MutableLiveData<Resource<List<StoryEntity>>> liveData = new MutableLiveData<>();
     private final ApiInterface apiInterface;
     private final int[] ids;
     private final HackerNewsDb db;
 
-    public FetchNewStoriesTask(ApiInterface apiInterface, int[] ids, HackerNewsDb db) {
+    public FetchTopStoriesTask(ApiInterface apiInterface, int[] ids, HackerNewsDb db) {
         this.apiInterface = apiInterface;
         this.ids = ids;
         this.db = db;
@@ -39,6 +42,9 @@ public class FetchNewStoriesTask implements Runnable {
         liveData.postValue(Resource.success(storyEntities));
     }
 
+    /**
+     * Recursive function to call API one by one.
+     */
     private void call(List<StoryEntity> storyEntities, int index) {
         try {
             Response<StoryEntity> response = apiInterface.getStory(ids[index]).execute();

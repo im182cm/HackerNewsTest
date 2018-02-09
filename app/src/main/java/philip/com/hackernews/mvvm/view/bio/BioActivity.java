@@ -13,6 +13,9 @@ import philip.com.hackernews.R;
 import philip.com.hackernews.mvvm.model.local.UserEntity;
 import philip.com.hackernews.util.Constant;
 
+/**
+ * Bio Activity that shows User Information.
+ */
 public class BioActivity extends AppCompatActivity {
 
     @Override

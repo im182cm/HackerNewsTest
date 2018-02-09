@@ -17,13 +17,16 @@ import philip.com.hackernews.mvvm.model.local.StoryEntity;
 import philip.com.hackernews.mvvm.model.local.UserEntity;
 import philip.com.hackernews.mvvm.model.remote.ApiInterface;
 import philip.com.hackernews.mvvm.model.remote.ApiResponse;
-import philip.com.hackernews.mvvm.model.remote.FetchNewStoriesTask;
-import philip.com.hackernews.mvvm.model.remote.FetchNewStoryIdsTask;
+import philip.com.hackernews.mvvm.model.remote.FetchTopStoriesTask;
+import philip.com.hackernews.mvvm.model.remote.FetchTopStoryIdsTask;
+import philip.com.hackernews.mvvm.view.main.PostFragment;
 
+/**
+ * Repository for local and remote.
+ */
 @Singleton
 public class Repository {
     private static final String LOG_TAG = Repository.class.getSimpleName();
-    private static Repository INSTANCE = null;
     private final ApiInterface mApiInterface;
     private final HackerNewsDb mHackerNewsDb;
     private final AppExecutors appExecutors;
@@ -35,48 +38,29 @@ public class Repository {
         this.appExecutors = appExecutors;
     }
 
-    public LiveData<Resource<int[]>> getNewStoryIds() {
-        FetchNewStoryIdsTask fetchNewStoryIdsTask = new FetchNewStoryIdsTask(mApiInterface);
-        appExecutors.networkIO().execute(fetchNewStoryIdsTask);
-        return fetchNewStoryIdsTask.getLiveData();
+    /**
+     * Fetch Top story ids.
+     */
+    public LiveData<Resource<int[]>> getTopStoryIds() {
+        FetchTopStoryIdsTask fetchTopStoryIdsTask = new FetchTopStoryIdsTask(mApiInterface);
+        appExecutors.networkIO().execute(fetchTopStoryIdsTask);
+        return fetchTopStoryIdsTask.getLiveData();
     }
 
-    public LiveData<Resource<List<StoryEntity>>> getStory(int[] ids) {
-        FetchNewStoriesTask fetchNewStoriesTask = new FetchNewStoriesTask(mApiInterface, ids, mHackerNewsDb);
-        appExecutors.networkIO().execute(fetchNewStoriesTask);
-        return fetchNewStoriesTask.getLiveData();
-        /*return new NetworkBoundResource<List<StoryEntity>, StoryEntity>(appExecutors) {
-            @Override
-            protected void saveCallResult(@NonNull StoryEntity newStory) {
-                mHackerNewsDb.storyDAO().insertStory(newStory);
-            }
-
-            @Override
-            protected boolean shouldFetch(@Nullable List<StoryEntity> data) {
-                boolean isExist = false;
-                for (StoryEntity storyEntity : data){
-                    if (storyEntity.getId() == id) {
-                        isExist = true;
-                        break;
-                    }
-                }
-                return id > 0 && !isExist;
-            }
-
-            @NonNull
-            @Override
-            protected LiveData<List<StoryEntity>> loadFromDb() {
-                return mHackerNewsDb.storyDAO().loadStories();
-            }
-
-            @NonNull
-            @Override
-            protected LiveData<ApiResponse<StoryEntity>> createCall() {
-                return mApiInterface.getStory(id);
-            }
-        }.asLiveData();*/
+    /**
+     * Get Stories by id array. Sync network connection.
+     *
+     * @param ids set in {@link PostFragment#getTopStories()}
+     */
+    public LiveData<Resource<List<StoryEntity>>> getStories(int[] ids) {
+        FetchTopStoriesTask fetchTopStoriesTask = new FetchTopStoriesTask(mApiInterface, ids, mHackerNewsDb);
+        appExecutors.networkIO().execute(fetchTopStoriesTask);
+        return fetchTopStoriesTask.getLiveData();
     }
 
+    /**
+     * Get comment. Async connection.
+     */
     public LiveData<Resource<List<CommentEntity>>> getComment(final int parent, final int id) {
         return new NetworkBoundResource<List<CommentEntity>, CommentEntity>(appExecutors) {
             @Override
@@ -84,10 +68,13 @@ public class Repository {
                 mHackerNewsDb.commentDao().insertComment(commentEntity);
             }
 
+            /**
+             * If comment is exist in DB, then not fetch. I know that comment can be fixed, but be simple.
+             */
             @Override
             protected boolean shouldFetch(@Nullable List<CommentEntity> data) {
                 boolean isExist = false;
-                for (CommentEntity commentEntity : data){
+                for (CommentEntity commentEntity : data) {
                     if (commentEntity.getId() == id) {
                         isExist = true;
                         break;
@@ -110,6 +97,9 @@ public class Repository {
         }.asLiveData();
     }
 
+    /**
+     * Get Bio Information.
+     */
     public LiveData<Resource<UserEntity>> getUser(final String id) {
         return new NetworkBoundResource<UserEntity, UserEntity>(appExecutors) {
             @Override

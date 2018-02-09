@@ -8,11 +8,15 @@ import java.io.IOException;
 import philip.com.hackernews.mvvm.model.Resource;
 import retrofit2.Response;
 
-public class FetchNewStoryIdsTask implements Runnable {
+/**
+ * Runnable class to fecth top story ids. Do not save in DB.
+ * Top 500 stories are changing in real time.
+ */
+public class FetchTopStoryIdsTask implements Runnable {
     private final MutableLiveData<Resource<int[]>> liveData = new MutableLiveData<>();
     private final ApiInterface apiInterface;
 
-    public FetchNewStoryIdsTask(ApiInterface apiInterface) {
+    public FetchTopStoryIdsTask(ApiInterface apiInterface) {
         this.apiInterface = apiInterface;
     }
 

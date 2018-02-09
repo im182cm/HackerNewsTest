@@ -8,6 +8,10 @@ import java.util.Date;
 
 import philip.com.hackernews.util.ArrayTypeConverter;
 
+/**
+ * Database structure of comments.
+ */
+
 @Entity(tableName = "comments")
 public class CommentEntity {
     public String by;

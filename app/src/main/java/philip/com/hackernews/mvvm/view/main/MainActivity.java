@@ -8,6 +8,9 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerAppCompatActivity;
 import philip.com.hackernews.R;
 
+/**
+ * Main Activity. Launcher.
+ */
 public class MainActivity extends DaggerAppCompatActivity {
     @Inject
     public PostFragment mPostFragment;

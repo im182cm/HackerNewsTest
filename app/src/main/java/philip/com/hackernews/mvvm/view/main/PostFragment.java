@@ -33,12 +33,8 @@ import philip.com.hackernews.util.Constant;
 
 /**
  * A fragment representing a list of Items.
- * <p/>
- * interface.
  */
 public class PostFragment extends DaggerFragment {
-    private static final String LOG_TAG = PostFragment.class.getSimpleName();
-
     @Inject
     ViewModelProvider.Factory viewModelFactory;
     private MainViewModel mainViewModel;
