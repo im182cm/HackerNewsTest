@@ -1,6 +1,7 @@
 package philip.com.hackernews.mvvm.model.local;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverters;
 
@@ -15,7 +16,8 @@ import philip.com.hackernews.util.ArrayTypeConverter;
 @Entity(tableName = "stories")
 public class StoryEntity {
     private String by;
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
+    private int index;
     private int id;
     private String title;
     private String type;
@@ -25,8 +27,9 @@ public class StoryEntity {
     @TypeConverters(ArrayTypeConverter.class)
     private int[] kids;
 
-    public StoryEntity(String by, int id, String title, String type, String url, int score, long time, int[] kids) {
+    public StoryEntity(String by, int index, int id, String title, String type, String url, int score, long time, int[] kids) {
         this.by = by;
+        this.index = index;
         this.id = id;
         this.title = title;
         this.type = type;
@@ -36,8 +39,17 @@ public class StoryEntity {
         this.kids = kids;
     }
 
+    @Ignore
+    public StoryEntity(int id) {
+        this.id = id;
+    }
+
     public String getBy() {
         return by;
+    }
+
+    public int getIndex() {
+        return index;
     }
 
     public int getId() {
@@ -74,8 +86,28 @@ public class StoryEntity {
 
     @Override
     public String toString() {
-        return "StoryEntity{" +
-                ", id=" + id +
+        return "{" +
+                "index="+index+
+                "id=" + id +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean isEqual = false;
+
+        if (obj instanceof StoryEntity){
+            StoryEntity storyEntity = (StoryEntity) obj;
+            isEqual = storyEntity.id == this.id;
+        }
+
+        return isEqual;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 17 * hash + this.id;
+        return hash;
     }
 }

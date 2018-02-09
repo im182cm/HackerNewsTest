@@ -15,6 +15,9 @@ public interface StoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertStories(List<StoryEntity> storyEntities);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertStory(StoryEntity storyEntity);
+
     @Query("SELECT * from stories")
     List<StoryEntity> loadStories();
 }

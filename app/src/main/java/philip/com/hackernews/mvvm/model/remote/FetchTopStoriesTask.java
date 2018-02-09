@@ -5,7 +5,6 @@ import android.arch.lifecycle.MutableLiveData;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import philip.com.hackernews.mvvm.model.Resource;
@@ -19,7 +18,7 @@ import retrofit2.Response;
 public class FetchTopStoriesTask implements Runnable {
     private final MutableLiveData<Resource<List<StoryEntity>>> mLiveData = new MutableLiveData<>();
     private final ApiInterface mApiInterface;
-    private final int[] mIds;
+    private int[] mIds;
     private final HackerNewsDb mDb;
     private final boolean mIsFirst;
 
@@ -36,10 +35,25 @@ public class FetchTopStoriesTask implements Runnable {
 
         if (mIsFirst) {
             List<StoryEntity> local = mDb.storyDAO().loadStories();
-            Collections.reverse(local);
             if (mIds == null || mIds.length == 0) {
                 mLiveData.postValue(Resource.success(local));
             } else {
+                // Check if it is not fetched data, read from DB and if it is then remove it.
+                List<Integer> notFetchedIds = new ArrayList<>();
+                for (int i = 0; i < mIds.length; i++) {
+                    if (!local.contains(new StoryEntity(mIds[i]))) {
+                        notFetchedIds.add(mIds[i]);
+                    }
+                }
+                if (notFetchedIds.size() == 0) {
+                    mIds = null;
+                } else {
+                    int[] changedIds = new int[notFetchedIds.size()];
+                    for (int i = 0; i < notFetchedIds.size(); i++) {
+                        changedIds[i] = notFetchedIds.get(i).intValue();
+                    }
+                    mIds = changedIds;
+                }
                 mLiveData.postValue(Resource.loading(local));
             }
         }
@@ -68,7 +82,9 @@ public class FetchTopStoriesTask implements Runnable {
             // If fectching is done.
             try {
                 mDb.beginTransaction();
-                mDb.storyDAO().insertStories(storyEntities);
+                for (StoryEntity storyEntity : storyEntities) {
+                    mDb.storyDAO().insertStory(storyEntity);
+                }
                 mDb.setTransactionSuccessful();
             } finally {
                 mDb.endTransaction();
