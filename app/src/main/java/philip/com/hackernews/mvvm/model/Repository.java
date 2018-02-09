@@ -42,7 +42,7 @@ public class Repository {
     }
 
     public LiveData<Resource<List<StoryEntity>>> getStory(int[] ids) {
-        FetchNewStoriesTask fetchNewStoriesTask = new FetchNewStoriesTask(mApiInterface, ids);
+        FetchNewStoriesTask fetchNewStoriesTask = new FetchNewStoriesTask(mApiInterface, ids, mHackerNewsDb);
         appExecutors.networkIO().execute(fetchNewStoriesTask);
         return fetchNewStoriesTask.getLiveData();
         /*return new NetworkBoundResource<List<StoryEntity>, StoryEntity>(appExecutors) {

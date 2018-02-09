@@ -11,8 +11,8 @@ import java.util.List;
 @Dao
 public interface StoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertStory(StoryEntity storyEntity);
+    void insertStories(List<StoryEntity> storyEntities);
 
     @Query("SELECT * from stories")
-    LiveData<List<StoryEntity>> loadStories();
+    List<StoryEntity> loadStories();
 }
