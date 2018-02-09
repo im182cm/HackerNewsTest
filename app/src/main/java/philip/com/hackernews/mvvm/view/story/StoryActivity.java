@@ -38,12 +38,9 @@ public class StoryActivity extends DaggerAppCompatActivity {
         initLayout();
 
         StoryViewModel storyViewModel = ViewModelProviders.of(this, viewModelFactory).get(StoryViewModel.class);
-        Log.d(LOG_TAG, "parent : "+getIntent().getIntExtra(Constant.EXTRA_PARENT, -1));
         storyViewModel.getmComments(getIntent().getIntExtra(Constant.EXTRA_PARENT, -1)).observe(this, new Observer<Resource<List<CommentEntity>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<CommentEntity>> listResource) {
-                Log.d(LOG_TAG, listResource.status.name());
-
                 if (listResource.data == null) {
                     return;
                 }

@@ -70,8 +70,6 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             if (mStoryEntities.isEmpty()) {
                 return;
             }
-            if (v.getId() == R.id.layout_post)
-                Log.d("TEST", "layout post clicked");
 
             switch (v.getId()) {
                 case R.id.layout_post:

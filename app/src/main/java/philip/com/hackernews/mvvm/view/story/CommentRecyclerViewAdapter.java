@@ -1,6 +1,10 @@
 package philip.com.hackernews.mvvm.view.story;
 
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +32,15 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         CommentEntity CommentEntity = mCommentEntities.get(position);
 
-        holder.mTextViewText.setText(CommentEntity.getText());
+        if (!TextUtils.isEmpty(CommentEntity.getText())) {
+            Spanned aboutHtml;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                aboutHtml = Html.fromHtml(CommentEntity.getText(), Html.FROM_HTML_MODE_LEGACY);
+            } else {
+                aboutHtml = Html.fromHtml(CommentEntity.getText());
+            }
+            holder.mTextViewText.setText(aboutHtml);
+        }
         holder.mTextViewBy.setText(CommentEntity.getBy());
         holder.mTextViewDate.setText(CommentEntity.getTime());
     }

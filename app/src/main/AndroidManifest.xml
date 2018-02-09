@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".mvvm.view.story.StoryActivity" />
-        <activity android:name=".mvvm.view.main.BioActivity"></activity>
+        <activity android:name=".mvvm.view.bio.BioActivity"></activity>
     </application>
 
 </manifest>

@@ -11,14 +11,12 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -29,6 +27,7 @@ import philip.com.hackernews.mvvm.model.Resource;
 import philip.com.hackernews.mvvm.model.Status;
 import philip.com.hackernews.mvvm.model.local.StoryEntity;
 import philip.com.hackernews.mvvm.model.local.UserEntity;
+import philip.com.hackernews.mvvm.view.bio.BioActivity;
 import philip.com.hackernews.mvvm.view.story.StoryActivity;
 import philip.com.hackernews.util.Constant;
 
@@ -126,16 +125,12 @@ public class PostFragment extends DaggerFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
-        mainViewModel.getmNewStoryIds().observe(this, new Observer<Resource<int[]>>() {
+        mainViewModel.getmTopStoryIds().observe(this, new Observer<Resource<int[]>>() {
             @Override
             public void onChanged(@Nullable Resource<int[]> listResource) {
-                Log.d(LOG_TAG, listResource.status.name());
-
                 if (listResource.data == null) {
                     return;
                 }
-                Log.d(LOG_TAG, listResource.data.toString());
-
                 // if top stories ids are not more than visibleThreshold
                 if (visibleThreshold > listResource.data.length) {
                     expectedCount = listResource.data.length;
@@ -155,7 +150,7 @@ public class PostFragment extends DaggerFragment {
         index = index + expectedCount - 1;
         expectedCount = 0;
 
-        mainViewModel.getmNewStories(ids).observe(this, new Observer<Resource<List<StoryEntity>>>() {
+        mainViewModel.getmTopStories(ids).observe(this, new Observer<Resource<List<StoryEntity>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<StoryEntity>> listResource) {
                 if (!listResource.status.equals(Status.SUCCESS)) {

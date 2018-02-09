@@ -26,11 +26,11 @@ public class MainViewModel extends ViewModel {
         mNewStoryIds = repository.getNewStoryIds();
     }
 
-    public LiveData<Resource<int[]>> getmNewStoryIds() {
+    public LiveData<Resource<int[]>> getmTopStoryIds() {
         return mNewStoryIds;
     }
 
-    public LiveData<Resource<List<StoryEntity>>> getmNewStories(int[] ids) {
+    public LiveData<Resource<List<StoryEntity>>> getmTopStories(int[] ids) {
         mNewStories = mRepository.getStory(ids);
         return mNewStories;
     }

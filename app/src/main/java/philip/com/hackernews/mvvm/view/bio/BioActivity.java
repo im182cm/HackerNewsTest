@@ -1,4 +1,4 @@
-package philip.com.hackernews.mvvm.view.main;
+package philip.com.hackernews.mvvm.view.bio;
 
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
