@@ -52,8 +52,8 @@ public class Repository {
      *
      * @param ids set in {@link PostFragment#getTopStories(int)}
      */
-    public LiveData<Resource<List<StoryEntity>>> getStories(int[] ids) {
-        FetchTopStoriesTask fetchTopStoriesTask = new FetchTopStoriesTask(mApiInterface, ids, mHackerNewsDb);
+    public LiveData<Resource<List<StoryEntity>>> getStories(int[] ids, boolean isFrist) {
+        FetchTopStoriesTask fetchTopStoriesTask = new FetchTopStoriesTask(mApiInterface, ids, mHackerNewsDb, isFrist);
         appExecutors.networkIO().execute(fetchTopStoriesTask);
         return fetchTopStoriesTask.getmLiveData();
     }

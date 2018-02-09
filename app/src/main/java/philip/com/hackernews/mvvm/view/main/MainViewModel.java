@@ -3,6 +3,7 @@ package philip.com.hackernews.mvvm.view.main;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,9 +17,12 @@ import philip.com.hackernews.mvvm.model.local.UserEntity;
  * ViewModel for {@link MainActivity}
  */
 public class MainViewModel extends ViewModel {
-    private final LiveData<Resource<int[]>> mNewStoryIds;
-    private LiveData<Resource<List<StoryEntity>>> mNewStories;
+    private final LiveData<Resource<int[]>> mTopStoryIds;
+    private LiveData<Resource<List<StoryEntity>>> mTopStories;
     private LiveData<Resource<UserEntity>> mUser;
+
+    private int mIdsIndex = 0;
+    private final int mVisibleThreshold = 30;
 
     @Inject
     Repository mRepository;
@@ -26,16 +30,27 @@ public class MainViewModel extends ViewModel {
     @SuppressWarnings("unchecked")
     @Inject
     public MainViewModel(Repository repository) {
-        mNewStoryIds = repository.getTopStoryIds();
+        mTopStoryIds = repository.getTopStoryIds();
     }
 
     public LiveData<Resource<int[]>> getmTopStoryIds() {
-        return mNewStoryIds;
+        return mTopStoryIds;
     }
 
-    public LiveData<Resource<List<StoryEntity>>> getmTopStories(int[] ids) {
-        mNewStories = mRepository.getStories(ids);
-        return mNewStories;
+    public LiveData<Resource<List<StoryEntity>>> getmTopStories(int fetchingDataCount) {
+        // If it exceeds Top story ids array size, then fetch amount of remain count.
+        if (mTopStoryIds.getValue().data.length - 1 < mIdsIndex + mVisibleThreshold) {
+            fetchingDataCount = mTopStoryIds.getValue().data.length - 1 - mIdsIndex;
+        }
+
+        boolean isFirst = mIdsIndex == 0;
+        // Copy array with range. This will be handed over for data fetching.
+        int[] ids = Arrays.copyOfRange(mTopStoryIds.getValue().data, mIdsIndex, mIdsIndex + fetchingDataCount);
+        // move index.
+        mIdsIndex = mIdsIndex + fetchingDataCount - 1;
+
+        mTopStories = mRepository.getStories(ids, isFirst);
+        return mTopStories;
     }
 
     public LiveData<Resource<UserEntity>> getmUser(String id) {

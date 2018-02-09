@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,7 +23,6 @@ import javax.inject.Inject;
 import dagger.android.support.DaggerFragment;
 import philip.com.hackernews.R;
 import philip.com.hackernews.mvvm.model.Resource;
-import philip.com.hackernews.mvvm.model.Status;
 import philip.com.hackernews.mvvm.model.local.StoryEntity;
 import philip.com.hackernews.mvvm.model.local.UserEntity;
 import philip.com.hackernews.mvvm.view.bio.BioActivity;
@@ -44,10 +42,7 @@ public class PostFragment extends DaggerFragment {
     // RecyclerView scroll threshold.
     private final int mVisibleThreshold = 30;
     private boolean mIsLoading = false;
-
-    // Fetched Top Story ids.
-    private int[] mTopStoryIds;
-    private int mIdsIndex = 0;
+    private boolean mIsStoryIdsLoaded = false;
 
     private List<StoryEntity> mStoryEntities = new ArrayList<>();
 
@@ -103,17 +98,13 @@ public class PostFragment extends DaggerFragment {
                 // if it is not loading data from API AND currently looking item + threshold > total Item count.
                 if (!mIsLoading && totalItemCount <= (lastVisibleItem + mVisibleThreshold)) {
                     // if scroll before fetch story ids from API.
-                    if (mTopStoryIds == null)
+                    if (!mIsStoryIdsLoaded) {
                         return;
+                    }
                     // Let's say it is started.
                     mIsLoading = true;
                     // How many data I should fetch from API.
                     int fetchingDataCount = mVisibleThreshold;
-
-                    // If it exceeds Top story ids array size, then fetch amount of remain count.
-                    if (mTopStoryIds.length - 1 < mIdsIndex + mVisibleThreshold) {
-                        fetchingDataCount = mTopStoryIds.length - 1 - mIdsIndex;
-                    }
 
                     getTopStories(fetchingDataCount);
                 }
@@ -134,6 +125,8 @@ public class PostFragment extends DaggerFragment {
                     return;
                 }
 
+                mIsStoryIdsLoaded = true;
+
                 int fetchingDataCount = 0;
                 // If mVisibleThreshold is bigger than Top stories array. Maybe This will not going to happen in this app.
                 if (mVisibleThreshold > listResource.data.length) {
@@ -142,8 +135,6 @@ public class PostFragment extends DaggerFragment {
                     fetchingDataCount = mVisibleThreshold;
                 }
 
-                mTopStoryIds = listResource.data;
-
                 // First fetching.
                 getTopStories(fetchingDataCount);
             }
@@ -151,18 +142,9 @@ public class PostFragment extends DaggerFragment {
     }
 
     private void getTopStories(int fetchingDataCount) {
-        // Copy array with range. This will be handed over for data fetching.
-        int[] ids = Arrays.copyOfRange(mTopStoryIds, mIdsIndex, mIdsIndex + fetchingDataCount);
-        // move index.
-        mIdsIndex = mIdsIndex + fetchingDataCount - 1;
-
-        mMainViewModel.getmTopStories(ids).observe(this, new Observer<Resource<List<StoryEntity>>>() {
+        mMainViewModel.getmTopStories(fetchingDataCount).observe(this, new Observer<Resource<List<StoryEntity>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<StoryEntity>> listResource) {
-                if (!listResource.status.equals(Status.SUCCESS)) {
-                    return;
-                }
-
                 mStoryEntities.addAll(listResource.data);
                 mPostRecyclerViewAdapter.setmStoryEntities(mStoryEntities);
                 mIsLoading = false;

@@ -21,24 +21,26 @@ public class FetchTopStoriesTask implements Runnable {
     private final ApiInterface mApiInterface;
     private final int[] mIds;
     private final HackerNewsDb mDb;
+    private final boolean mIsFirst;
 
-    public FetchTopStoriesTask(ApiInterface apiInterface, int[] ids, HackerNewsDb db) {
+    public FetchTopStoriesTask(ApiInterface apiInterface, int[] ids, HackerNewsDb db, boolean isFirst) {
         this.mApiInterface = apiInterface;
         this.mIds = ids;
         this.mDb = db;
+        this.mIsFirst = isFirst;
     }
 
     @Override
     public void run() {
         List<StoryEntity> storyEntities = new ArrayList<>();
 
-        List<StoryEntity> local = mDb.storyDAO().loadStories();
-        if (local.size() < mIds.length) {
-            call(storyEntities, 0);
-        } else {
+        if (mIsFirst) {
+            List<StoryEntity> local = mDb.storyDAO().loadStories();
             Collections.reverse(local);
-            storyEntities = local;
+            mLiveData.postValue(Resource.loading(local));
         }
+
+        call(storyEntities, 0);
         mLiveData.postValue(Resource.success(storyEntities));
     }
 

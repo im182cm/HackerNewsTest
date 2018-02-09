@@ -75,14 +75,7 @@ public class StoryEntity {
     @Override
     public String toString() {
         return "StoryEntity{" +
-                "by='" + by + '\'' +
                 ", id=" + id +
-                ", title='" + title + '\'' +
-                ", type='" + type + '\'' +
-                ", url='" + url + '\'' +
-                ", score=" + score +
-                ", time=" + time +
-                ", kids=" + Arrays.toString(kids) +
                 '}';
     }
 }
