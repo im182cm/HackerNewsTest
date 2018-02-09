@@ -37,11 +37,17 @@ public class FetchTopStoriesTask implements Runnable {
         if (mIsFirst) {
             List<StoryEntity> local = mDb.storyDAO().loadStories();
             Collections.reverse(local);
-            mLiveData.postValue(Resource.loading(local));
+            if (mIds == null || mIds.length == 0) {
+                mLiveData.postValue(Resource.success(local));
+            } else {
+                mLiveData.postValue(Resource.loading(local));
+            }
         }
 
-        call(storyEntities, 0);
-        mLiveData.postValue(Resource.success(storyEntities));
+        if (mIds != null && mIds.length != 0) {
+            call(storyEntities, 0);
+            mLiveData.postValue(Resource.success(storyEntities));
+        }
     }
 
     /**

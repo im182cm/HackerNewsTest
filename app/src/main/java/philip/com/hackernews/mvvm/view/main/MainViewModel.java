@@ -48,7 +48,6 @@ public class MainViewModel extends ViewModel {
         boolean isFirst = mIdsIndex == 0;
         // Copy array with range. This will be handed over for data fetching.
         int[] ids = Arrays.copyOfRange(mTopStoryIds.getValue().data, mIdsIndex, mIdsIndex + fetchingDataCount);
-        Log.d("HackerNews", "size:"+ids.length);
         // move index.
         mIdsIndex = mIdsIndex + fetchingDataCount;
 
