@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_post"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/color_ffffff"
-    android:orientation="vertical"
     android:padding="15dp">
 
     <TextView
@@ -12,25 +12,27 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/text_point"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        app:layout_constraintTop_toBottomOf="@+id/text_title" />
 
-        <TextView
-            android:id="@+id/text_point"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/text_by"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:textColor="@color/colorPrimary"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_point"
+        app:layout_constraintLeft_toRightOf="@+id/text_point" />
 
-        <TextView
-            android:id="@+id/text_by"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary" />
+    <TextView
+        android:id="@+id/text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_point"
+        app:layout_constraintLeft_toRightOf="@+id/text_by" />
 
-        <TextView
-            android:id="@+id/text_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
