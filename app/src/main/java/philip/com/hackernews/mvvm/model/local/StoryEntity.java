@@ -14,16 +14,16 @@ import philip.com.hackernews.util.ArrayTypeConverter;
  */
 @Entity(tableName = "stories")
 public class StoryEntity {
-    public String by;
+    private String by;
     @PrimaryKey
-    public int id;
-    public String title;
-    public String type;
-    public String url;
-    public int score;
-    public long time;
+    private int id;
+    private String title;
+    private String type;
+    private String url;
+    private int score;
+    private long time;
     @TypeConverters(ArrayTypeConverter.class)
-    public int[] kids;
+    private int[] kids;
 
     public StoryEntity(String by, int id, String title, String type, String url, int score, long time, int[] kids) {
         this.by = by;

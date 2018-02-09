@@ -75,10 +75,10 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
 
             switch (v.getId()) {
                 case R.id.layout_post:
-                    mListener.onClick(mStoryEntities.get(getAdapterPosition()).getUrl(), null, mStoryEntities.get(getAdapterPosition()).getKids(), mStoryEntities.get(getAdapterPosition()).getId());
+                    mListener.onClick(mStoryEntities.get(getAdapterPosition()), true);
                     break;
                 case R.id.text_by:
-                    mListener.onClick(null, mStoryEntities.get(getAdapterPosition()).getBy(), null, -1);
+                    mListener.onClick(mStoryEntities.get(getAdapterPosition()), false);
                     break;
             }
         }

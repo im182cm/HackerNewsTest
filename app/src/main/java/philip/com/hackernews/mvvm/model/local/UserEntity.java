@@ -18,12 +18,12 @@ import philip.com.hackernews.util.ArrayTypeConverter;
 public class UserEntity implements Parcelable {
     @PrimaryKey
     @NonNull
-    public String id;
-    public int created;
-    public int karma;
-    public String about;
+    private String id;
+    private int created;
+    private int karma;
+    private String about;
     @TypeConverters(ArrayTypeConverter.class)
-    public int[] submitted;
+    private int[] submitted;
 
     public UserEntity(String id, int created, int karma, String about, int[] submitted) {
         this.id = id;

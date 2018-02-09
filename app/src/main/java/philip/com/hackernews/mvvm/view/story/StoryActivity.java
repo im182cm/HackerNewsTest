@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -24,11 +24,11 @@ import philip.com.hackernews.mvvm.model.local.CommentEntity;
 import philip.com.hackernews.util.Constant;
 
 public class StoryActivity extends DaggerAppCompatActivity {
-    private final String LOG_TAG = StoryActivity.class.getSimpleName();
-
     private CommentRecyclerViewAdapter mCommentRecyclerViewAdapter;
     @Inject
-    ViewModelProvider.Factory viewModelFactory;
+    ViewModelProvider.Factory mViewModelFactory;
+
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +37,7 @@ public class StoryActivity extends DaggerAppCompatActivity {
 
         initLayout();
 
-        StoryViewModel storyViewModel = ViewModelProviders.of(this, viewModelFactory).get(StoryViewModel.class);
+        StoryViewModel storyViewModel = ViewModelProviders.of(this, mViewModelFactory).get(StoryViewModel.class);
         storyViewModel.getmComments(getIntent().getIntExtra(Constant.EXTRA_PARENT, -1)).observe(this, new Observer<Resource<List<CommentEntity>>>() {
             @Override
             public void onChanged(@Nullable Resource<List<CommentEntity>> listResource) {
@@ -49,8 +49,8 @@ public class StoryActivity extends DaggerAppCompatActivity {
         });
 
         int[] kids = getIntent().getIntArrayExtra(Constant.EXTRA_KIDS);
-        if (kids != null){
-            for (int kid : kids){
+        if (kids != null) {
+            for (int kid : kids) {
                 storyViewModel.getmComments(getIntent().getIntExtra(Constant.EXTRA_PARENT, -1), kid).observe(this, new Observer<Resource<List<CommentEntity>>>() {
                     @Override
                     public void onChanged(@Nullable Resource<List<CommentEntity>> listResource) {
@@ -61,6 +61,8 @@ public class StoryActivity extends DaggerAppCompatActivity {
                     }
                 });
             }
+        } else {
+            mRecyclerView.setVisibility(View.GONE);
         }
     }
 
@@ -80,11 +82,18 @@ public class StoryActivity extends DaggerAppCompatActivity {
 
         webView.loadUrl(getIntent().getStringExtra(Constant.EXTRA_URL));
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_comment);
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+        mRecyclerView = findViewById(R.id.recycler_comment);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
         mCommentRecyclerViewAdapter = new CommentRecyclerViewAdapter();
-        recyclerView.setAdapter(mCommentRecyclerViewAdapter);
+        mRecyclerView.setAdapter(mCommentRecyclerViewAdapter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        mRecyclerView.setAdapter(null);
     }
 }

@@ -4,6 +4,9 @@ import android.arch.persistence.room.TypeConverter;
 
 import com.google.gson.Gson;
 
+/**
+ * TypeConvert to save int array in DB.
+ */
 public class ArrayTypeConverter {
     Gson gson = new Gson();
 

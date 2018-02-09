@@ -14,13 +14,13 @@ import philip.com.hackernews.util.ArrayTypeConverter;
 
 @Entity(tableName = "comments")
 public class CommentEntity {
-    public String by;
+    private String by;
     @PrimaryKey
-    public int id;
-    public String text;
-    public String type;
-    public long time;
-    int parent;
+    private int id;
+    private String text;
+    private String type;
+    private long time;
+    private int parent;
 
     public CommentEntity(String by, int id, String text, String type, long time, int parent) {
         this.by = by;

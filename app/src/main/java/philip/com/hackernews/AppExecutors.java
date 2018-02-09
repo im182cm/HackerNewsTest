@@ -34,16 +34,16 @@ import javax.inject.Singleton;
 @Singleton
 public class AppExecutors {
 
-    private final Executor diskIO;
+    private final Executor mDiskIO;
 
-    private final Executor networkIO;
+    private final Executor mNetworkIO;
 
-    private final Executor mainThread;
+    private final Executor mMainThread;
 
     private AppExecutors(Executor diskIO, Executor networkIO, Executor mainThread) {
-        this.diskIO = diskIO;
-        this.networkIO = networkIO;
-        this.mainThread = mainThread;
+        this.mDiskIO = diskIO;
+        this.mNetworkIO = networkIO;
+        this.mMainThread = mainThread;
     }
 
     @Inject
@@ -53,15 +53,15 @@ public class AppExecutors {
     }
 
     public Executor diskIO() {
-        return diskIO;
+        return mDiskIO;
     }
 
     public Executor networkIO() {
-        return networkIO;
+        return mNetworkIO;
     }
 
     public Executor mainThread() {
-        return mainThread;
+        return mMainThread;
     }
 
     private static class MainThreadExecutor implements Executor {

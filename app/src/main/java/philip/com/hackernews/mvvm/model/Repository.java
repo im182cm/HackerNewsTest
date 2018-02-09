@@ -50,7 +50,7 @@ public class Repository {
     /**
      * Get Stories by id array. Sync network connection.
      *
-     * @param ids set in {@link PostFragment#getTopStories()}
+     * @param ids set in {@link PostFragment#getTopStories(int)}
      */
     public LiveData<Resource<List<StoryEntity>>> getStories(int[] ids) {
         FetchTopStoriesTask fetchTopStoriesTask = new FetchTopStoriesTask(mApiInterface, ids, mHackerNewsDb);

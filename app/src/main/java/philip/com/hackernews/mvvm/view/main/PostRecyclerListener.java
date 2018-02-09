@@ -1,8 +1,15 @@
 package philip.com.hackernews.mvvm.view.main;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
+import philip.com.hackernews.mvvm.model.local.StoryEntity;
+
+/**
+ * Listener for PostRecyclerView.
+ */
 interface PostRecyclerListener {
-    void onClick(@NonNull String url, @Nullable String by, @Nullable int[] kids, int parent);
+    /**
+     * RecyclerView Item click listener.
+     */
+    void onClick(@NonNull StoryEntity storyEntity, boolean isPost);
 }
