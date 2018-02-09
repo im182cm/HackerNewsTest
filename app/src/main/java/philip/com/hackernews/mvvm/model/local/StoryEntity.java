@@ -21,7 +21,7 @@ public class StoryEntity {
     private String type;
     private String url;
     private int score;
-    private long time;
+    public long time;
     @TypeConverters(ArrayTypeConverter.class)
     private int[] kids;
 

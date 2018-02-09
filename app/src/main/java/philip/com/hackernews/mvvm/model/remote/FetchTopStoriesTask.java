@@ -17,29 +17,29 @@ import retrofit2.Response;
  * Runnable class to fetch 30 data at once, and save in DB.
  */
 public class FetchTopStoriesTask implements Runnable {
-    private final MutableLiveData<Resource<List<StoryEntity>>> liveData = new MutableLiveData<>();
-    private final ApiInterface apiInterface;
-    private final int[] ids;
-    private final HackerNewsDb db;
+    private final MutableLiveData<Resource<List<StoryEntity>>> mLiveData = new MutableLiveData<>();
+    private final ApiInterface mApiInterface;
+    private final int[] mIds;
+    private final HackerNewsDb mDb;
 
     public FetchTopStoriesTask(ApiInterface apiInterface, int[] ids, HackerNewsDb db) {
-        this.apiInterface = apiInterface;
-        this.ids = ids;
-        this.db = db;
+        this.mApiInterface = apiInterface;
+        this.mIds = ids;
+        this.mDb = db;
     }
 
     @Override
     public void run() {
         List<StoryEntity> storyEntities = new ArrayList<>();
 
-        List<StoryEntity> local = db.storyDAO().loadStories();
-        if (local.size() < ids.length) {
+        List<StoryEntity> local = mDb.storyDAO().loadStories();
+        if (local.size() < mIds.length) {
             call(storyEntities, 0);
         } else {
             Collections.reverse(local);
             storyEntities = local;
         }
-        liveData.postValue(Resource.success(storyEntities));
+        mLiveData.postValue(Resource.success(storyEntities));
     }
 
     /**
@@ -47,27 +47,28 @@ public class FetchTopStoriesTask implements Runnable {
      */
     private void call(List<StoryEntity> storyEntities, int index) {
         try {
-            Response<StoryEntity> response = apiInterface.getStory(ids[index]).execute();
+            Response<StoryEntity> response = mApiInterface.getStory(mIds[index]).execute();
             if (response.isSuccessful()) {
                 storyEntities.add(response.body());
             }
         } catch (IOException e) {
-            //liveData.postValue(Resource.error(e.getMessage(), storyEntities));
+            //mLiveData.postValue(Resource.error(e.getMessage(), storyEntities));
         }
-        if (index < ids.length - 1) {
+        if (index < mIds.length - 1) {
             call(storyEntities, index + 1);
         } else {
+            // If fectching is done.
             try {
-                db.beginTransaction();
-                db.storyDAO().insertStories(storyEntities);
-                db.setTransactionSuccessful();
+                mDb.beginTransaction();
+                mDb.storyDAO().insertStories(storyEntities);
+                mDb.setTransactionSuccessful();
             } finally {
-                db.endTransaction();
+                mDb.endTransaction();
             }
         }
     }
 
-    public LiveData<Resource<List<StoryEntity>>> getLiveData() {
-        return liveData;
+    public LiveData<Resource<List<StoryEntity>>> getmLiveData() {
+        return mLiveData;
     }
 }

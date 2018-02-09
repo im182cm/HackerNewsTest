@@ -44,7 +44,7 @@ public class Repository {
     public LiveData<Resource<int[]>> getTopStoryIds() {
         FetchTopStoryIdsTask fetchTopStoryIdsTask = new FetchTopStoryIdsTask(mApiInterface);
         appExecutors.networkIO().execute(fetchTopStoryIdsTask);
-        return fetchTopStoryIdsTask.getLiveData();
+        return fetchTopStoryIdsTask.getmLiveData();
     }
 
     /**
@@ -55,7 +55,7 @@ public class Repository {
     public LiveData<Resource<List<StoryEntity>>> getStories(int[] ids) {
         FetchTopStoriesTask fetchTopStoriesTask = new FetchTopStoriesTask(mApiInterface, ids, mHackerNewsDb);
         appExecutors.networkIO().execute(fetchTopStoriesTask);
-        return fetchTopStoriesTask.getLiveData();
+        return fetchTopStoriesTask.getmLiveData();
     }
 
     /**

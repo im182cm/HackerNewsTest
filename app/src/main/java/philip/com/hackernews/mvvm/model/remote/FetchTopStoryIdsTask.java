@@ -13,29 +13,29 @@ import retrofit2.Response;
  * Top 500 stories are changing in real time.
  */
 public class FetchTopStoryIdsTask implements Runnable {
-    private final MutableLiveData<Resource<int[]>> liveData = new MutableLiveData<>();
-    private final ApiInterface apiInterface;
+    private final MutableLiveData<Resource<int[]>> mLiveData = new MutableLiveData<>();
+    private final ApiInterface mApiInterface;
 
     public FetchTopStoryIdsTask(ApiInterface apiInterface) {
-        this.apiInterface = apiInterface;
+        this.mApiInterface = apiInterface;
     }
 
     @Override
     public void run() {
         try {
-            Response<int[]> response = apiInterface.getNewStories().execute();
+            Response<int[]> response = mApiInterface.getNewStories().execute();
             ApiResponse<int[]> apiResponse = new ApiResponse<>(response);
             if (apiResponse.isSuccessful()) {
-                liveData.postValue(Resource.success(apiResponse.body));
+                mLiveData.postValue(Resource.success(apiResponse.body));
             } else {
-                liveData.postValue(Resource.error(apiResponse.errorMessage, new int[1]));
+                mLiveData.postValue(Resource.error(apiResponse.errorMessage, new int[1]));
             }
         } catch (IOException e) {
-            liveData.postValue(Resource.error(e.getMessage(), new int[1]));
+            mLiveData.postValue(Resource.error(e.getMessage(), new int[1]));
         }
     }
 
-    public LiveData<Resource<int[]>> getLiveData() {
-        return liveData;
+    public LiveData<Resource<int[]>> getmLiveData() {
+        return mLiveData;
     }
 }

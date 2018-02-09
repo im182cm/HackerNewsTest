@@ -62,3 +62,4 @@
 -keepclassmembers class android.arch.** { *; }
 -keep class android.arch.** { *; }
 -dontwarn android.arch.**
+-keep class philip.com.hackernews.mvvm.model.local.** { *; }

@@ -19,7 +19,7 @@ public class UserEntity implements Parcelable {
     @PrimaryKey
     @NonNull
     private String id;
-    private int created;
+    public int created;
     private int karma;
     private String about;
     @TypeConverters(ArrayTypeConverter.class)

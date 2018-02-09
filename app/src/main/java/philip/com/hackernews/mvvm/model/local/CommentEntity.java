@@ -19,7 +19,7 @@ public class CommentEntity {
     private int id;
     private String text;
     private String type;
-    private long time;
+    public long time;
     private int parent;
 
     public CommentEntity(String by, int id, String text, String type, long time, int parent) {
