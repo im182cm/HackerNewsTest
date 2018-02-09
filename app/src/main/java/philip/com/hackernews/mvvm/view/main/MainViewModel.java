@@ -2,6 +2,7 @@ package philip.com.hackernews.mvvm.view.main;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import java.util.Arrays;
 import java.util.List;
@@ -46,8 +47,9 @@ public class MainViewModel extends ViewModel {
         boolean isFirst = mIdsIndex == 0;
         // Copy array with range. This will be handed over for data fetching.
         int[] ids = Arrays.copyOfRange(mTopStoryIds.getValue().data, mIdsIndex, mIdsIndex + fetchingDataCount);
+        Log.d("HackerNews", "size:"+ids.length);
         // move index.
-        mIdsIndex = mIdsIndex + fetchingDataCount - 1;
+        mIdsIndex = mIdsIndex + fetchingDataCount;
 
         mTopStories = mRepository.getStories(ids, isFirst);
         return mTopStories;
